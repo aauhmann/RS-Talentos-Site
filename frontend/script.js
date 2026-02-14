@@ -1,8 +1,35 @@
 const BASE_URL = 'http://localhost:3000/api/courses';
 
+function renderCourse(course) {
+    const container = document.createElement("section");
+    container.className = "course-card";
+    container.innerHTML = `
+        <h3>${course.name} (${course.id})</h3>
+        <p><strong>Créditos:</strong> ${course.credits}</p>
+        <p><strong>Período:</strong> ${course.term}</p>
+        <p><strong>Rótulo:</strong> ${course.label}</p>
+        <p><strong>Departamento:</strong> ${course.department}</p>
+        <p><strong>Requisitos:</strong> ${Array.isArray(course.requisites) ? course.requisites.join(", ") : course.requisites}</p>
+    `;
+    return container;
+}
+
 function showResult(mensagem, isError = false) {
-    const classe = isError ? 'error' : 'success';
-    document.getElementById('result').innerHTML = `<div class="${classe}"><pre>${JSON.stringify(mensagem, null, 2)}</pre></div>`;
+    const el = document.getElementById('resultado');
+    el.innerHTML = '';
+    if (isError) {
+        el.innerHTML = `<div class="error">${mensagem}</div>`;
+        return;
+    }
+    if (Array.isArray(mensagem)) {
+        mensagem.forEach(c => el.appendChild(renderCourse(c)));
+        return;
+    }
+    if (mensagem && typeof mensagem === 'object') {
+        el.appendChild(renderCourse(mensagem));
+        return;
+    }
+    el.innerHTML = `<div class="success">${mensagem}</div>`;
 }
 
 async function getCourse() {

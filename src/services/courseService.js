@@ -9,8 +9,21 @@ class CourseService {
     }
     
     create() { // Creates all courses
-        const course = new Course("INF01808", "Algoritmos e Programacao", 6, 1, "Instituto de Informatica", null);
-        this.#courses.push(course);
+        let requisites = [];
+        let c = new Course("INF01202", "Algoritmos e Programação - CIC", 6, 1, 0, null);
+        this.#courses.push(c);
+
+        c = new Course("MAT01353", "Cálculo e Geometria Analítica 1", 6, 1, 0, null);
+        this.#courses.push(c);
+
+        c = new Course("ECP99002", "Introdução à Engenharia de Computação", 2, 1, 0, null);
+        this.#courses.push(c);
+
+        c = new Course("FIS01181", "Física 1 - C", 6, 1, 0, null);
+        this.#courses.push(c);
+
+        c = new Course("INF05508", "Lógica para Computação", 4, 1, 0, null);
+        this.#courses.push(c);
 
         // Include all courses here
     }
@@ -20,9 +33,7 @@ class CourseService {
     }
 
     showTerm(termNum) { // Shows all courses of a chosen term
-        const filtered = this.#courses.filter(course => course.term === termNum);
-
-        filtered.forEach(course => course.show()); // Shows the courses
+        return filtered = this.#courses.filter(course => course.term === termNum); // Returns all courses of a chosen term
     }
 
     add(course) {
