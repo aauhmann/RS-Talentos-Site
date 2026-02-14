@@ -21,9 +21,9 @@ class Course {
                 break;
         }
 
-        string = id.slice(0, 3); // String gets the first 3 letters of the id
-        string = string.toUpperCase(); // All letters to uppercase
-        switch(string) {
+        let str = id.slice(0, 3); // String gets the first 3 letters of the id
+        str = str.toUpperCase(); // All letters to uppercase
+        switch(str) {
             case "INF":
                 this.department = "Instituto de Informática";
                 break;
