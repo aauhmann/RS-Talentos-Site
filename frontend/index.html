@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talents Site</title>
+    <style>
+        body { font-family: Arial; margin: 20px; background-color: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        h2 { color: #333; }
+        input { padding: 8px; margin: 5px; width: 200px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 4px; }
+        button:hover { background-color: #0056b3; }
+        .resultado { margin-top: 20px; padding: 15px; border: 1px solid #ddd; background-color: #f9f9f9; border-radius: 4px; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gerenciador de Cadeiras</h1>
+
+        <section>
+            <h2>Buscar Cadeira por ID</h2>
+            <input type="text" id="courseId" placeholder="Ex: INF01808">
+            <button onclick="getCourse()">Buscar</button>
+        </section>
+
+        <section>
+            <h2>Listar Cadeiras por Etapa</h2>
+            <input type="number" id="termNum" placeholder="Ex: 1" min="1">
+            <button onclick="showTerm()">Listar</button>
+        </section>
+
+        <section>
+            <h2>Adicionar Cadeira</h2>
+            <input type="text" id="addId" placeholder="ID">
+            <button onclick="addCourse()">Adicionar</button>
+        </section>
+
+        <section>
+            <h2>Remover Cadeira</h2>
+            <input type="text" id="removeId" placeholder="ID do curso">
+            <button onclick="removeCourse()">Remover</button>
+        </section>
+
+        <div class="resultado" id="resultado"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

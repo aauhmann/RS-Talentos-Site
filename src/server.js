@@ -1,8 +1,17 @@
 const express = require('express');
+const path = require('path');
+const courseRoutes = require('./routes/courseRoutes');
+
 const app = express();
 
+app.use(express.json());
+
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+app.use('/api/courses', courseRoutes);
+
 app.get('/', (req, res) => {
-    res.send("Servidor funcionando");
+    res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
 app.listen(3000, () => {
