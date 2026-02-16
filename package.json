@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/aauhmann/Talents-Site#readme",
   "dependencies": {
-    "express": "^5.2.1"
+    "csv-parse": "^6.1.0",
+    "express": "^5.2.1",
+    "xlsx": "^0.18.5"
   }
 }

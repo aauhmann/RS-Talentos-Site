@@ -1,15 +1,14 @@
+const fs = require("fs");
 const path = require("path");
-const xlsx = require("xlsx");
+const { parse } = require("csv-parse/sync");
 
 function readSheetRow(filePath, rowIndex) {
     const absPath = path.resolve(filePath);
+    const content = fs.readFileSync(absPath, "utf8");
 
-    const workbook = xlsx.readFile(absPath);
-    const targetSheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[targetSheetName];
+    const rows = parse(content, { skip_empty_lines: true });
 
-    const rows = xlsx.utils.sheet_to_json(worksheet, { header: 1, defval: null });
-    return rows[rowIndex] || rows[0];
+    return rows[rowIndex] || [];
 }
 
 module.exports = { readSheetRow };

@@ -1,5 +1,6 @@
 const Course = require('../models/courseModel');
 const Sheet = require('../models/sheetModel');
+const path = require("path");
 
 class CourseService {
     #courses
@@ -10,14 +11,14 @@ class CourseService {
 
         let course;
         let index = 1;
-        const path = '../assets/Sheet.csv';
-        let row = Sheet.readSheetRow(path, index++);
+        const sheetPath = path.resolve(__dirname, '../assets/Sheet.csv');
+        let row = Sheet.readSheetRow(sheetPath, index++);
 
         while (Array.isArray(row) && row.length !== 0) {
             course = new Course(row);
             this.#courses.push(course);
-
-            row = Sheet.readSheetRow(path, index++);
+        
+            row = Sheet.readSheetRow(sheetPath, index++);
         }
     }
 
