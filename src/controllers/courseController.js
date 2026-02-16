@@ -21,6 +21,10 @@ class CourseController {
         this.courseService.removeFromChosen(course);
     }
 
+    getAllCourses() {
+        return this.courseService.getAllCourses();
+    }
+
     showChosen() {
         this.courseService.showChosen();
     }

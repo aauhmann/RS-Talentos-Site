@@ -42,6 +42,10 @@ class CourseService {
         this.chosen = this.chosen.filter(c => c !== course);
     }
 
+    getAllCourses() {
+        return this.#courses;
+    }
+
     requirements() { // Shows all requirements remaining
 
     }

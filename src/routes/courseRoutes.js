@@ -5,6 +5,10 @@ const Course = require('../models/courseModel');
 const router = express.Router();
 const controller = new CourseController();
 
+router.get("/", (req, res) => {
+  res.json(controller.getAllCourses());
+});
+
 router.get('/course/:id', (req, res) => {
     const course = controller.getCourse(req.params.id);
     if (course) {
