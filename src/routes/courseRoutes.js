@@ -16,7 +16,7 @@ router.get('/course/:id', (req, res) => {
 
 router.get('/term/:termNum', (req, res) => {
     controller.showTerm(req.params.termNum);
-    num = req.params.termNum;
+    const num = req.params.termNum;
     if (num < 1 || num > 10) {
         res.status(404).json({ message: "Etapa inválida (1 a 10)" });
     }

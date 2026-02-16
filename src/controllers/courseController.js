@@ -3,7 +3,6 @@ const CourseService = require('../services/courseService');
 class CourseController {
     constructor() {
         this.courseService = new CourseService();
-        this.courseService.create(); // Initializes all courses
     }
 
     getCourse(id) {
@@ -15,11 +14,11 @@ class CourseController {
     }
 
     addCourse(course) {
-        this.courseService.add(course);
+        this.courseService.addToChosen(course);
     }
 
     removeCourse(course) {
-        this.courseService.remove(course);
+        this.courseService.removeFromChosen(course);
     }
 
     showChosen() {
