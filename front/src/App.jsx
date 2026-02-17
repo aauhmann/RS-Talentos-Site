@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import SectionWrapper from "./components/SectionWrapper";
 import CourseCard from "./components/CourseCard";
+import CourseModal from "./components/CourseModal";
 
 export default function App() {
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -27,6 +30,16 @@ export default function App() {
     load();
   }, []);
 
+  const handleSelectCourse = (course) => {
+    setSelectedCourse(course);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedCourse(null);
+  };
+
   return (
     <>
       <SectionWrapper id="matriz" title="Cursos - Engenharia de Computação UFRGS">
@@ -36,11 +49,18 @@ export default function App() {
             <CourseCard 
               key={course.id} 
               course={course} 
-              onSelect={(c) => console.log("Selecionado:", c)}
+              onSelect={handleSelectCourse}
             />
           ))}
         </div>
       </SectionWrapper>
+
+      {isModalOpen && (
+        <CourseModal 
+          course={selectedCourse} 
+          onClose={handleCloseModal}
+        />
+      )}
     </>
   );
 }
