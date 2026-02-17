@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import SectionWrapper from "./components/SectionWrapper";
+import CourseCard from "./components/CourseCard";
 
 export default function App() {
   const [data, setData] = useState([]);
@@ -26,24 +28,19 @@ export default function App() {
   }, []);
 
   return (
-  <div>
-    <h1>Curso Engenharia de Computação UFRGS</h1>
-
-    {data.map((course) => (
-      <div key={course.id} style={{
-        border: "1px solid #444",
-        padding: "16px",
-        marginBottom: "12px",
-        borderRadius: "8px"
-      }}>
-        <h2>{course.name}</h2>
-        <p><strong>Código:</strong> {course.id}</p>
-        <p><strong>Carga Horária:</strong> {course.hours}h</p>
-        <p><strong>Créditos:</strong> {course.credits}</p>
-        <p><strong>Departamento:</strong> {course.department}</p>
-      </div>
-    ))}
-  </div>
-);
-
+    <>
+      <SectionWrapper id="matriz" title="Cursos - Engenharia de Computação UFRGS">
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {data.map((course) => (
+            <CourseCard 
+              key={course.id} 
+              course={course} 
+              onSelect={(c) => console.log("Selecionado:", c)}
+            />
+          ))}
+        </div>
+      </SectionWrapper>
+    </>
+  );
 }
