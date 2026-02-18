@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import SectionWrapper from "./components/SectionWrapper";
-import CourseCard from "./components/CourseCard";
 import CourseModal from "./components/CourseModal";
+import Roadmap from "./components/Roadmap";
 
 export default function App() {
   const [data, setData] = useState([]);
@@ -15,8 +15,7 @@ export default function App() {
         setError("");
 
         const res = await fetch("/api/courses");
-
-        const text = await res.text(); 
+        const text = await res.text();
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${text}`);
 
         const json = JSON.parse(text);
@@ -43,23 +42,17 @@ export default function App() {
   return (
     <>
       <SectionWrapper id="matriz" title="Cursos - Engenharia de Computação UFRGS">
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {data.map((course) => (
-            <CourseCard 
-              key={course.id} 
-              course={course} 
-              onSelect={handleSelectCourse}
-            />
-          ))}
-        </div>
+        {error ? (
+          <div className="p-4 rounded-lg border border-red-200 bg-red-50 text-red-700 text-sm">
+            {error}
+          </div>
+        ) : null}
+
+        <Roadmap courses={data} onSelect={handleSelectCourse} />
       </SectionWrapper>
 
       {isModalOpen && (
-        <CourseModal 
-          course={selectedCourse} 
-          onClose={handleCloseModal}
-        />
+        <CourseModal course={selectedCourse} onClose={handleCloseModal} />
       )}
     </>
   );

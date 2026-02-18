@@ -55,7 +55,7 @@ export default function CourseModal({ course, onClose }) {
 
         <div className="p-3 rounded-xl bg-gray-50 mb-6">
           <p className="text-xs font-semibold text-gray-700 mb-1">Pré-requisitos</p>
-          <p className="text-sm text-gray-800"> {course.prerequisites || "Nenhum"}</p>
+          <p className="text-sm text-gray-800"> {course.prerequisites.join(", ") || "Nenhum"}</p>
         </div>
       </div>
     </div>
