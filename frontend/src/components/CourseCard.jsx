@@ -1,5 +1,11 @@
-export default function CourseCard({ course, onSelect }) {
-
+export default function CourseCard({
+  course,
+  onSelect,
+  onHover,
+  isHighlighted = false,
+  isPrereq = false,
+  isDependent = false,
+}) {
   const labelStyles = {
     "Obrigatória": "text-blue-600 bg-blue-50",
     "Alternativa": "text-purple-600 bg-purple-50",
@@ -7,16 +13,41 @@ export default function CourseCard({ course, onSelect }) {
     "Adicional": "text-orange-600 bg-orange-50",
   };
 
-  const courseLabel = course.label || "Obrigatória"; // Default to "Obrigatória"
+  const courseLabel = course.label || "Obrigatória"; // default to "Obrigatória"
   const labelStyle = labelStyles[courseLabel] || "text-blue-600 bg-blue-50";
+
+  const highlightClass =
+    isHighlighted
+      ? "ring-2 ring-blue-500 shadow-lg scale-[1.01]"
+      : isPrereq
+      ? "ring-2 ring-purple-400 shadow-md scale-[1.01]"
+      : isDependent
+      ? "ring-2 ring-orange-400 shadow-md scale-[1.01]"
+      : "hover:shadow-lg hover:border-blue-300 hover:scale-[1.005]";
 
   return (
     <div className="group relative p-4 rounded-xl border border-gray-200 bg-white hover:shadow-lg hover:border-blue-300 transition-all text-black flex flex-col h-full">
       <h3 className="font-semibold text-lg text-gray-900 mb-4 h-[70px] flex items-start">{course.name}</h3> {/* min h 24 */ }
-      
+    <div
       <div className="space-y-2 mb-4 text-sm">
+      </div>
+    <div
+      id={`subject-${course.id}`}
+      onMouseEnter={() => onHover?.(course.id)}
+      onMouseLeave={() => onHover?.(null)}
+      className={[
+        "group relative p-2.5 rounded-xl border border-gray-200 bg-white transition-all text-black flex flex-col",
+        highlightClass,
+      ].join(" ")}
+    >
+      <h3 className="font-semibold text-base text-gray-900 mb-1 line-clamp-2 min-h-[44px]">
+        {course.name}
+      </h3>
+
+      <div className="space-y-1.5 mb-3 text-sm flex-1">
         <div className="text-gray-700">
-          <span className="font-medium text-gray-800">Código:</span> <span className="text-gray-600">{course.id}</span>
+          <span className="font-medium text-gray-800">Código:</span>{" "}
+          <span className="text-gray-600">{course.id}</span>
         </div>
         
         <div className="text-gray-700">
@@ -34,7 +65,10 @@ export default function CourseCard({ course, onSelect }) {
         </div>
       </div>
 
-      <button onClick={() => onSelect(course)} className="w-full bg-gray-200 hover:bg-blue-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors mt-auto">
+      <button
+        onClick={() => onSelect(course)}
+        className="w-full bg-gray-200 hover:bg-blue-300 text-gray-800 font-medium py-1 px-2 rounded-lg transition-colors"
+      >
         Detalhes
       </button>
     </div>
