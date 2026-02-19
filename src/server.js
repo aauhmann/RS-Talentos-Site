@@ -1,25 +1,27 @@
 const express = require('express');
 const path = require('path');
+const { execSync } = require('child_process');
 const courseRoutes = require('./routes/courseRoutes');
 
 const app = express();
 
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, '../frontend')));
+// Builds frontend API
+console.log("Building frontend...");
+execSync('npm run build', { cwd: path.join(__dirname, '../frontend'), stdio: 'inherit' });
+console.log("Frontend build completed");
+
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 app.use('/api/courses', courseRoutes);
 
+// Serves the html file
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
+// Prints in the terminal when server is running
 app.listen(3000, () => {
-    console.log("Rodando em http://localhost:3000");
-});
-
-app.get('/api/usuario', (req, res) => {
-    res.json({
-        id: 599256
-    });
+    console.log("\nRunning on http://localhost:3000");
 });
