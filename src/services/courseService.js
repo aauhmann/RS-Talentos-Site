@@ -13,6 +13,10 @@ class CourseService {
         let course;
         let index = 1;
         const sheetPath = path.resolve(__dirname, '../assets/Sheet.csv');
+
+        console.log('Procurando CSV em:', sheetPath);
+        console.log('Arquivo existe?', require('fs').existsSync(sheetPath));
+
         let row = Sheet.readSheetRow(sheetPath, index++);
 
         // Copies all courses in a Excel sheet to the courses array
