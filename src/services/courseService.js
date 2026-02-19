@@ -17,8 +17,10 @@ class CourseService {
 
         // Copies all courses in a Excel sheet to the courses array
         while (Array.isArray(row) && row.length !== 0) {
-            course = new Course(row);
-            this.#courses.push(course);
+            if (Number(row[0]) || row[0] == "" || row[0] == "0") {
+                course = new Course(row);
+                this.#courses.push(course);
+            }
         
             row = Sheet.readSheetRow(sheetPath, index++);
         }

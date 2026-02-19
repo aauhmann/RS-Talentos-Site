@@ -41,7 +41,29 @@ export default function App() {
 
   return (
     <>
-      <SectionWrapper id="matriz" title="Cursos - Engenharia de Computação UFRGS">
+      <SectionWrapper 
+        id="matriz" 
+        title="Cursos - Engenharia de Computação UFRGS"
+        subtitle={
+          <span className="flex flex-wrap items-center gap-4">
+            <span className="flex items-center gap-2">
+              <span className="inline-block h-3 w-3 rounded-full bg-blue-500"></span>
+              Selecionada
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="inline-block h-3 w-3 rounded-full bg-purple-400"></span>
+              Pré-Requisito
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="inline-block h-3 w-3 rounded-full bg-orange-400"></span>
+              Liberadas
+            </span>
+          </span>
+        }
+        titleClassName="sticky left-10 z-10 w-fit"
+        subtitleClassName="sticky left-11 z-10 w-fit"
+      >
+
         {error ? (
           <div className="p-4 rounded-lg border border-red-200 bg-red-50 text-red-700 text-sm">
             {error}

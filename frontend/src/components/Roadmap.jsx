@@ -2,12 +2,17 @@ import { useMemo, useState } from "react";
 import SemesterColumn from "./SemesterColumn";
 
 export default function Roadmap({ courses = [], onSelect }) {
-  const [highlightedId, setHighlightedId] = useState(null);
+  const [hoveredId, setHoveredId] = useState(null);
+  const [pinnedId, setPinnedId] = useState(null);
+
+  const highlightedId = pinnedId ?? hoveredId;
+  
+  const withHover = !!highlightedId;
 
   const subjects = useMemo(() => {
     return courses.map((c) => ({
       ...c,
-      semester: Number(c.term || 0),
+      semester: c.term !== "" && !isNaN(Number(c.term)) ? Number(c.term) : null,
       prerequisites: c.requisites,
     }));
   }, [courses]);
@@ -55,7 +60,8 @@ export default function Roadmap({ courses = [], onSelect }) {
   const semesters = useMemo(() => {
     const grouped = {};
     subjects.forEach((s) => {
-      const sem = s.semester || 0;
+      const sem = s.semester ?? "semPeriodo";
+      
       if (!grouped[sem]) grouped[sem] = [];
       grouped[sem].push(s);
     });
@@ -64,10 +70,15 @@ export default function Roadmap({ courses = [], onSelect }) {
 
   const semesterList = useMemo(() => {
     const sems = Array.from(new Set(subjects.map((s) => s.semester)))
-      .filter((n) => n > 0)
-      .sort((a, b) => a - b);
 
-    return sems.map((sem) => ({ sem, name: `Semestre ${sem}` }));
+    const list = sems
+    .filter((n) => typeof n === "number")
+    .sort((a, b) => a - b)
+    .map((sem) => ({ sem, name: `Semestre ${sem}` }));
+
+    if (sems.includes(null)) list.push({ sem: "semPeriodo", name: "Sem período definido" });
+
+    return list;
   }, [subjects]);
 
   return (
@@ -82,8 +93,16 @@ export default function Roadmap({ courses = [], onSelect }) {
               highlightedId={highlightedId}
               prereqIds={prereqIds}
               dependentIds={dependentIds}
-              onHover={setHighlightedId}
+              pinnedId={pinnedId}
+              onHover={(id) => {
+                if (pinnedId) return;
+                setHoveredId(id);
+              }}
+              onTogglePin={(id) => {
+                setPinnedId((prev) => (prev === id ? null : id));
+              }}
               onSelect={onSelect}
+              withHover={withHover}
             />
           ))}
         </div>

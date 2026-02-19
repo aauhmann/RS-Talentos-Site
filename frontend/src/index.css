@@ -58,36 +58,6 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-/*Scrollbar customization*/
-.roadmap-scroll {
-  overflow-x: auto;
-  transform: rotateX(180deg);
-}
-
-.roadmap-scroll > div {
-  transform: rotateX(180deg);
-}
-
-.roadmap-scroll::-webkit-scrollbar {
-  height: 14px !important;
-  background: #F7F7F9 !important;
-}
-
-.roadmap-scroll::-webkit-scrollbar-track {
-  background: #F7F7F9 !important;
-  border: none !important;
-}
-
-.roadmap-scroll::-webkit-scrollbar-thumb {
-  background: #d1d5db !important;
-  border-radius: 10px !important;
-  border: 2px solid white !important;
-}
-
-.roadmap-scroll::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af !important;
-}
-
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -99,4 +69,27 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+/* Scrollbar customization (Chrome/Edge)*/
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: #F7F7F9;
+}
+::-webkit-scrollbar-thumb {
+  background: #7c7c7c;
+  border-radius: 9999px;
+  border: 3px solid #F7F7F9;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #4d4d4d;
+}
+
+/* Scrollbar customization (Firefox) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #5d5c5c #F7F7F9;
 }

@@ -24,11 +24,11 @@ export default function CourseModal({ course, onClose }) {
           <X className="w-5 h-5" />
         </button>
 
-        <div className="flex items-start gap-3 mb-4">
+        <div className="flex items-start gap-3 mb-4 pr-10">
           <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
             <span className="text-lg">📚</span>
           </div>
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <h2 className="text-xl font-bold text-gray-900">{course.name}</h2>
             <p className="text-sm text-gray-600">{course.id}</p>
           </div>
@@ -44,13 +44,18 @@ export default function CourseModal({ course, onClose }) {
           <span className="inline-block px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
             {course.hours} horas
           </span>
+          {course.term && (
+            <span className="inline-block px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
+              {course.term}º semestre
+            </span>
+          )}
           <span className="inline-block px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
-            {course.term}º período
+            {course.department}
           </span>
         </div>
 
         <p className="text-sm text-gray-700 leading-relaxed mb-6">
-          {course.description || "Nenhuma descrição disponível."}
+          {course.summary || "Nenhuma descrição disponível."}
         </p>
 
         <div className="p-3 rounded-xl bg-gray-50 mb-6">
