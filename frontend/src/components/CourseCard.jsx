@@ -13,7 +13,7 @@ export default function CourseCard({
     "Adicional": "text-orange-600 bg-orange-50",
   };
 
-  const courseLabel = course.label || "Obrigatória"; // default to "Obrigatória"
+  const courseLabel = course.label || "Obrigatória";
   const labelStyle = labelStyles[courseLabel] || "text-blue-600 bg-blue-50";
 
   const highlightClass =
@@ -26,11 +26,6 @@ export default function CourseCard({
       : "hover:shadow-lg hover:border-blue-300 hover:scale-[1.005]";
 
   return (
-    <div className="group relative p-4 rounded-xl border border-gray-200 bg-white hover:shadow-lg hover:border-blue-300 transition-all text-black flex flex-col h-full">
-      <h3 className="font-semibold text-lg text-gray-900 mb-4 h-[70px] flex items-start">{course.name}</h3> {/* min h 24 */ }
-    <div
-      <div className="space-y-2 mb-4 text-sm">
-      </div>
     <div
       id={`subject-${course.id}`}
       onMouseEnter={() => onHover?.(course.id)}
@@ -49,14 +44,10 @@ export default function CourseCard({
           <span className="font-medium text-gray-800">Código:</span>{" "}
           <span className="text-gray-600">{course.id}</span>
         </div>
-        
-        <div className="text-gray-700">
-          <span className="font-medium text-gray-800">Créditos:</span> <span className="text-gray-600">{course.credits}</span>
-        </div>
 
         <div className="flex justify-between items-center text-gray-700">
           <div>
-            <span className="font-medium text-gray-800">Período:</span> <span className="text-gray-600">{course.term}</span>
+            <span className="font-medium text-gray-800">Créditos:</span> <span className="text-gray-600">{course.credits}</span>
           </div>
 
           <span className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${labelStyle}`}>

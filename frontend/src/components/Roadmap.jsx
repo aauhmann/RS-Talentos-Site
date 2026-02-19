@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import SemesterColumn from "./SemesterColumn";
-import { parseRequisites } from "../lib/parseRequisites";
 
 export default function Roadmap({ courses = [], onSelect }) {
   const [highlightedId, setHighlightedId] = useState(null);
@@ -9,7 +8,7 @@ export default function Roadmap({ courses = [], onSelect }) {
     return courses.map((c) => ({
       ...c,
       semester: Number(c.term || 0),
-      prerequisites: parseRequisites(c.requisites),
+      prerequisites: c.requisites,
     }));
   }, [courses]);
 
@@ -72,9 +71,9 @@ export default function Roadmap({ courses = [], onSelect }) {
   }, [subjects]);
 
   return (
-    <div className="relative">
-      <div className="relative overflow-x-auto">
-        <div className="relative z-10 flex gap-3 py-4 ">
+    <div className="relative w-full">
+      <div className="relative roadmap-scroll w-full">
+        <div className="relative z-10 flex gap-3 py-4">
           {semesterList.map(({ sem, name }) => (
             <SemesterColumn
               key={sem}

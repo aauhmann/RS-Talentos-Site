@@ -58,6 +58,36 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/*Scrollbar customization*/
+.roadmap-scroll {
+  overflow-x: auto;
+  transform: rotateX(180deg);
+}
+
+.roadmap-scroll > div {
+  transform: rotateX(180deg);
+}
+
+.roadmap-scroll::-webkit-scrollbar {
+  height: 14px !important;
+  background: #F7F7F9 !important;
+}
+
+.roadmap-scroll::-webkit-scrollbar-track {
+  background: #F7F7F9 !important;
+  border: none !important;
+}
+
+.roadmap-scroll::-webkit-scrollbar-thumb {
+  background: #d1d5db !important;
+  border-radius: 10px !important;
+  border: 2px solid white !important;
+}
+
+.roadmap-scroll::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af !important;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
