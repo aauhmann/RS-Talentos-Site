@@ -78,13 +78,17 @@ export default function App() {
               <span className="inline-block h-3 w-3 rounded-full bg-blue-500"></span>
               Selecionada
             </span>
-            <span className="flex items-center gap-2">
+            <span className="pl-3 flex items-center gap-2">
               <span className="inline-block h-3 w-3 rounded-full bg-purple-400"></span>
               Pré-Requisito
             </span>
-            <span className="flex items-center gap-2">
+            <span className="pl-3 flex items-center gap-2">
               <span className="inline-block h-3 w-3 rounded-full bg-orange-400"></span>
-              Liberadas
+              Liberada
+            </span>
+            <span className="pl-3 flex items-center gap-2">
+              <span className="inline-block h-3 w-3 rounded-full bg-green-400"></span>
+              Adicionada ao Planejador
             </span>
           </span>
         }
