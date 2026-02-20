@@ -90,6 +90,10 @@ export default function App() {
         subtitle={
           <span className="flex flex-wrap items-center gap-4">
             <span className="flex items-center gap-2">
+              <span className="text-neutral-800 font-bold"></span>
+              Legenda:
+            </span>
+            <span className="pl-3 flex items-center gap-2">
               <span className="inline-block h-3 w-3 rounded-full bg-blue-500"></span>
               Selecionada
             </span>
