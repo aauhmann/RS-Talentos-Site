@@ -93,22 +93,22 @@ export default function App() {
               <span className="inline-block h-3 w-3 rounded-full bg-blue-500"></span>
               Selecionada
             </span>
-            <span className="pl-3 flex items-center gap-2">
+            <span className="pl-3.5 flex items-center gap-2">
               <span className="inline-block h-3 w-3 rounded-full bg-purple-400"></span>
               Pré-Requisito
             </span>
-            <span className="pl-3 flex items-center gap-2">
+            <span className="pl-3.5 flex items-center gap-2">
               <span className="inline-block h-3 w-3 rounded-full bg-orange-400"></span>
               Liberada
             </span>
-            <span className="pl-3 flex items-center gap-2">
-              <span className="inline-block h-3 w-3 rounded-full bg-green-400"></span>
+            <span className="pl-3.5 flex items-center gap-2">
+              <span className="inline-block h-3 w-3 rounded-full bg-green-500"></span>
               Adicionada ao Planejador
             </span>
           </span>
         }
         titleClassName="sticky left-10 z-10 w-fit"
-        subtitleClassName="sticky left-11 z-10 w-fit"
+        subtitleClassName="sticky left-11 z-10 w-fit text-gray-900 text-m"
         titleRight={
           <div className="sticky right-10 z-10 w-fit">
             <button

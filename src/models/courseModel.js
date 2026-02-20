@@ -12,7 +12,8 @@ class Course {
     
         this.credits = this.hours/15;
 
-        // Department selection based on it's ID
+        // Unused section for better department info
+        // // Department selection based on it's ID
         // let str = this.id.slice(0, 3); // String gets the first 3 letters of the id
         // str = str.toUpperCase(); // All letters to uppercase
         // switch(str) {
