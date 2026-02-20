@@ -1,5 +1,6 @@
 // ...existing code...
 const express = require('express');
+const cors = require('cors');
 const courseRoutes = require('./routes/courseRoutes');
 
 const app = express();
