@@ -4,6 +4,12 @@ const courseRoutes = require('./routes/courseRoutes');
 
 const app = express();
 
+app.use(cors({
+  origin: 'https://curriculo-ecp.netlify.app',
+  methods: ['GET', 'POST'],
+  credentials: true
+}));
+
 app.use(express.json());
 
 app.get('/', (req, res) => {
