@@ -13,8 +13,9 @@ export default function App() {
     async function load() {
       try {
         setError("");
-
-        const res = await fetch("/api/courses");
+      
+        const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+        const res = await fetch(`${apiUrl}/api/courses`);
         const text = await res.text();
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${text}`);
 
