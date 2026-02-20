@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import SemesterColumn from "./SemesterColumn";
 
-export default function Roadmap({ courses = [], onSelect, onChosenChanged, chosenIds = new Set() }) {
+export default function Roadmap({ courses = [], onSelect, onChosenChanged, chosenIds = new Set(), userId }) {
   const [hoveredId, setHoveredId] = useState(null);
   const [pinnedId, setPinnedId] = useState(null);
 
@@ -107,6 +107,7 @@ export default function Roadmap({ courses = [], onSelect, onChosenChanged, chose
               withHover={withHover}
               onChosenChanged={onChosenChanged}
               chosenIds={chosenIds}
+              userId={userId}
             />
           ))}
         </div>

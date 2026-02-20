@@ -12,7 +12,8 @@ export default function SemesterColumn({
   onTogglePin,
   withHover,
   onChosenChanged,
-  chosenIds
+  chosenIds,
+  userId
 }) {
 
     let totalCredits = 0;
@@ -50,6 +51,7 @@ export default function SemesterColumn({
             }
             onChosenChanged={onChosenChanged}
             isChosen={chosenIds.has(course.id)}
+            userId={userId}
           />
         ))}
       </div>

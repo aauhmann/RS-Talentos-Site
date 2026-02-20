@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import SectionWrapper from "./components/SectionWrapper";
 import CourseModal from "./components/CourseModal";
 import Roadmap from "./components/Roadmap";
@@ -13,6 +13,21 @@ export default function App() {
   const [plannerOpen, setPlannerOpen] = useState(false);
   const [chosenVersion, setChosenVersion] = useState(0);
   const [chosenIds, setChosenIds] = useState(new Set());
+
+  function getUserId() {
+    let id = localStorage.getItem("userId");
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem("userId", id);
+    }
+    return id;
+  }
+  const userId = getUserId();
+
+  // Removes userId after exiting or refreshing
+  window.addEventListener("beforeunload", () => {
+    localStorage.removeItem("userId");
+  });
 
   useEffect(() => {
     async function load() {
@@ -39,7 +54,7 @@ export default function App() {
     async function loadChosen() {
       try {
         const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
-        const res = await fetch(`${apiUrl}/api/courses/chosen`);
+        const res = await fetch(`${apiUrl}/api/courses/chosen?userId=${userId}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
         const json = await res.json();
@@ -98,7 +113,7 @@ export default function App() {
           <div className="sticky right-10 z-10 w-fit">
             <button
               onClick={() => setPlannerOpen(true)}
-              className="bg-[#F7F7F9] hover:bg-red-400 text-black text-xl font-medium py-4 px-6 rounded-lg transition-colors whitespace-nowrap border-2 border-gray-500 hover:border-red-500"
+              className="bg-[#F7F7F9] hover:bg-red-500 text-black hover:text-white text-xl font-medium py-4 px-6 rounded-lg transition-colors whitespace-nowrap border-2 border-gray-500 hover:border-red-500"
             >
               Planejador
             </button>
@@ -112,7 +127,13 @@ export default function App() {
           </div>
         ) : null}
 
-        <Roadmap courses={data} onSelect={handleSelectCourse} onChosenChanged={handleChosenChanged} chosenIds={chosenIds} />
+        <Roadmap 
+          courses={data} 
+          onSelect={handleSelectCourse} 
+          onChosenChanged={handleChosenChanged} 
+          chosenIds={chosenIds} 
+          userId={userId}
+        />
       </SectionWrapper>
 
       {isModalOpen && (
@@ -125,6 +146,7 @@ export default function App() {
           allCourses={data}
           chosenVersion={chosenVersion}
           onChosenChanged={handleChosenChanged}
+          userId={userId}
         />
       )}
       

@@ -10,7 +10,8 @@ export default function CourseCard({
   withHover = false,
   isRelated = false,
   onChosenChanged,
-  isChosen = false
+  isChosen = false,
+  userId
 }) {
   const labelStyles = {
     "Obrigatória": "text-blue-600 bg-blue-50",
@@ -84,41 +85,76 @@ export default function CourseCard({
           Detalhes
         </button>
 
-        <button
-          onClick={async (e) => {
-            e.stopPropagation();
-            try {
-              const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
-              console.log('Enviando para:', `${apiUrl}/api/courses/chosen`);
-              console.log('Curso ID:', course.id);
-              
-              const res = await fetch(`${apiUrl}/api/courses/chosen`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: course.id })
-              });
-              
-              console.log('Status resposta:', res.status);
-              const text = await res.text();
-              console.log('Resposta texto:', text);
-              
-              const result = text ? JSON.parse(text) : {};
-              console.log('Resultado parsed:', result);
-              
-              if (result.success) {
-                console.log('Curso adicionado:', result.chosen);
-              } else {
-                console.error('Erro:', result.message);
+        {!isChosen ? (
+          <button
+            onClick={async (e) => {
+              e.stopPropagation();
+              try {
+                const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+                console.log('Enviando para:', `${apiUrl}/api/courses/chosen?userId=${userId}`);
+                console.log('Curso ID:', course.id);
+
+                const res = await fetch(`${apiUrl}/api/courses/chosen`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ id: course.id, userId })
+                });
+
+                console.log('Status resposta:', res.status);
+                const text = await res.text();
+                console.log('Resposta texto:', text);
+
+                const result = text ? JSON.parse(text) : {};
+                console.log('Resultado parsed:', result);
+
+                if (result.success) {
+                  console.log('Curso adicionado:', result.chosen);
+                } else {
+                  console.error('Erro:', result.message);
+                }
+                onChosenChanged?.();
+              } catch (err) {
+                console.error('Erro completo:', err);
               }
-              onChosenChanged?.();
-            } catch (err) {
-              console.error('Erro completo:', err);
-            }
-          }}
-          className="bg-gray-200 hover:bg-green-300 text-gray-800 font-medium py-1 px-3 rounded-lg transition-colors border-2 border-transparent hover:border-green-500 focus:outline-none"
-        >
-          +
-        </button>
+            }}
+            className="bg-gray-200 hover:bg-green-300 text-gray-800 font-m py-1 px-3.5 rounded-lg transition-colors border-2 border-transparent hover:border-green-500 focus:outline-none"
+          >
+            +
+          </button>
+        ) : (
+          <button
+            onClick={async (e) => {
+              e.stopPropagation();
+              try {
+                const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+                console.log('Enviando para:', `${apiUrl}/api/courses/chosen?userId=${userId}`);
+                console.log('Curso ID:', course.id);
+
+                const res = await fetch(`${apiUrl}/api/courses/chosen/${course.id}?userId=${userId}`, {
+                  method: "DELETE",
+                });
+
+                console.log('Status resposta:', res.status);
+                const text = await res.text();
+                console.log('Resposta texto:', text);
+                const result = text ? JSON.parse(text) : {};
+                console.log('Resultado parsed:', result);
+
+                if (result.success) {
+                  console.log('Curso removido:', result.chosen);
+                } else {
+                  console.error('Erro:', result.message);
+                }
+                onChosenChanged?.();
+              } catch (err) {
+                console.error('Erro completo:', err);
+              }
+            }}
+            className="bg-gray-200 hover:bg-red-300 text-gray-800 font-m py-1 px-4 rounded-lg transition-colors border-2 border-transparent hover:border-red-500 focus:outline-none"
+          >
+            -
+          </button>
+        )}
       </div>
     </div>
   );

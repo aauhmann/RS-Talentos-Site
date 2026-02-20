@@ -5,7 +5,8 @@ export default function PlannerModal({
     onClose,
     allCourses = [],
     chosenVersion = 0,
-    onChosenChanged
+    onChosenChanged,
+    userId
 }) {
 
     const [s1, setS1] = useState([]);
@@ -19,9 +20,9 @@ export default function PlannerModal({
 
       (async () => {
         try {
-        const res = await fetch(`${apiUrl}/api/courses/chosen`);
+        const res = await fetch(`${apiUrl}/api/courses/chosen?userId=${userId}`);
         
-        console.log('Fetching chosen from:', `${apiUrl}/api/courses/chosen`, { signal: controller.signal });
+        console.log('Fetching chosen from:', `${apiUrl}/api/courses/chosen?userId=${userId}`, { signal: controller.signal });
         
         if (!res.ok) {
             throw new Error(`HTTP ${res.status}`);
@@ -78,7 +79,7 @@ export default function PlannerModal({
 
     const removeFromS1 = async (courseId) => {
         try {
-        await fetch(`${apiUrl}/api/courses/chosen/${courseId}`, {
+        await fetch(`${apiUrl}/api/courses/chosen/${courseId}?userId=${userId}`, {
             method: "DELETE",
         });
         setS1((prev) => prev.filter((c) => c.id !== courseId));
@@ -90,7 +91,7 @@ export default function PlannerModal({
 
     const removeFromS2 = async (courseId) => {
     try {
-        await fetch(`${apiUrl}/api/courses/chosen/${courseId}`, {
+        await fetch(`${apiUrl}/api/courses/chosen/${courseId}?userId=${userId}`, {
             method: "DELETE",
         });
         setS2((prev) => prev.filter((c) => c.id !== courseId));
