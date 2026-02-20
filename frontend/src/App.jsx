@@ -2,12 +2,17 @@ import { useEffect, useState } from "react";
 import SectionWrapper from "./components/SectionWrapper";
 import CourseModal from "./components/CourseModal";
 import Roadmap from "./components/Roadmap";
+import PlannerModal from "./components/PlannerModal";
 
 export default function App() {
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [plannerOpen, setPlannerOpen] = useState(false);
+  const [chosenVersion, setChosenVersion] = useState(0);
+  const [chosenIds, setChosenIds] = useState(new Set());
 
   useEffect(() => {
     async function load() {
@@ -30,6 +35,24 @@ export default function App() {
     load();
   }, []);
 
+  useEffect(() => {
+    async function loadChosen() {
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+        const res = await fetch(`${apiUrl}/api/courses/chosen`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const json = await res.json();
+        const ids = new Set(json.map((c) => c.id));
+        setChosenIds(ids);
+      } catch (e) {
+        console.error('Erro ao carregar chosen:', e);
+      }
+    }
+
+    loadChosen();
+  }, [chosenVersion]);
+
   const handleSelectCourse = (course) => {
     setSelectedCourse(course);
     setIsModalOpen(true);
@@ -38,6 +61,10 @@ export default function App() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedCourse(null);
+  };
+
+  const handleChosenChanged = () => {
+    setChosenVersion((v) => v + 1);
   };
 
   return (
@@ -63,6 +90,16 @@ export default function App() {
         }
         titleClassName="sticky left-10 z-10 w-fit"
         subtitleClassName="sticky left-11 z-10 w-fit"
+        titleRight={
+          <div className="sticky right-10 z-10 w-fit">
+            <button
+              onClick={() => setPlannerOpen(true)}
+              className="bg-[#F7F7F9] hover:bg-red-400 text-black text-xl font-medium py-4 px-6 rounded-lg transition-colors whitespace-nowrap border-2 border-gray-500 hover:border-red-500"
+            >
+              Planejador
+            </button>
+          </div>
+        }
       >
 
         {error ? (
@@ -71,12 +108,22 @@ export default function App() {
           </div>
         ) : null}
 
-        <Roadmap courses={data} onSelect={handleSelectCourse} />
+        <Roadmap courses={data} onSelect={handleSelectCourse} onChosenChanged={handleChosenChanged} chosenIds={chosenIds} />
       </SectionWrapper>
 
       {isModalOpen && (
         <CourseModal course={selectedCourse} onClose={handleCloseModal} />
       )}
+
+      {plannerOpen && (
+        <PlannerModal
+          onClose={() => setPlannerOpen(false)}
+          allCourses={data}
+          chosenVersion={chosenVersion}
+          onChosenChanged={handleChosenChanged}
+        />
+      )}
+      
     </>
   );
 }

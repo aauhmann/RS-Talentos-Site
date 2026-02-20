@@ -1,9 +1,16 @@
 import { useMemo, useState } from "react";
 import SemesterColumn from "./SemesterColumn";
 
-export default function Roadmap({ courses = [], onSelect }) {
+export default function Roadmap({ courses = [], onSelect, onChosenChanged, chosenIds = new Set() }) {
   const [hoveredId, setHoveredId] = useState(null);
   const [pinnedId, setPinnedId] = useState(null);
+
+  const handleHover = (id) => setHoveredId(id);
+
+  const handleTogglePin = (id) => {
+    setPinnedId((prev) => (prev === id ? null : id));
+    setHoveredId(id);
+  };
 
   const highlightedId = pinnedId ?? hoveredId;
   
@@ -94,15 +101,12 @@ export default function Roadmap({ courses = [], onSelect }) {
               prereqIds={prereqIds}
               dependentIds={dependentIds}
               pinnedId={pinnedId}
-              onHover={(id) => {
-                if (pinnedId) return;
-                setHoveredId(id);
-              }}
-              onTogglePin={(id) => {
-                setPinnedId((prev) => (prev === id ? null : id));
-              }}
+              onHover={handleHover}
+              onTogglePin={handleTogglePin}
               onSelect={onSelect}
               withHover={withHover}
+              onChosenChanged={onChosenChanged}
+              chosenIds={chosenIds}
             />
           ))}
         </div>

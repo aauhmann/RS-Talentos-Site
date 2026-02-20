@@ -13,37 +13,28 @@ router.get('/course/:id', (req, res) => {
     const course = controller.getCourse(req.params.id);
     if (course) {
         res.json(course);
-    } else {
-        res.status(404).json({ message: "Cadeira não encontrada" });
     }
 });
 
 router.get('/term/:termNum', (req, res) => {
     controller.showTerm(req.params.termNum);
-    const num = req.params.termNum;
-    if (num < 1 || num > 10) {
-        res.status(404).json({ message: "Etapa inválida (1 a 10)" });
-    }
-    else {
-        res.json({ message: `Cursos da etapa ${num}` });
-    }
 });
 
-router.post('/add', (req, res) => {
-    const data = req.body;
-    const course = new Course(data.id, data.name, data.credits, data.term, data.institute, data.prerequisite); // Reconstructs object
-    controller.addCourse(course);
-    res.json({ message: "Cadeira adicionada" });
+router.post('/chosen', (req, res) => {
+    const { id } = req.body;
+    const result = controller.addCourse(id);
+    res.json(result);
 });
 
-router.delete('/remove/:id', (req, res) => {
-    const course = controller.getCourse(req.params.id);
-    if (course) {
-        controller.removeCourse(course);
-        res.json({ message: "Cadeira removida" });
-    } else {
-        res.status(404).json({ message: "Cadeira não encontrada" });
-    }
+router.delete('/chosen/:id', (req, res) => {
+    const result = controller.removeCourse(req.params.id);
+    res.json(result);
+});
+
+router.get("/chosen", (req, res) => {
+    const result = controller.getChosen();
+    console.log('GET /chosen - resultado:', result);
+    res.json(result);
 });
 
 module.exports = router;

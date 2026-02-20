@@ -13,20 +13,31 @@ class CourseController {
         this.courseService.showTerm(term);
     }
 
-    addCourse(course) {
-        this.courseService.addToChosen(course);
+    addCourse(id) {
+        const course = this.courseService.getCourse(id);
+        if (!course) {
+            return { success: false, message: 'Curso não encontrado' };
+        }
+        const added = this.courseService.addToChosen(course);
+        return { success: added, chosen: this.courseService.getChosen() };
     }
 
-    removeCourse(course) {
+    removeCourse(id) {
+        const course = this.courseService.getCourse(id);
+        if (!course) {
+            return { success: false, message: 'Curso não encontrado' };
+        }
         this.courseService.removeFromChosen(course);
+        return { success: true, chosen: this.courseService.getChosen() };
     }
 
     getAllCourses() {
         return this.courseService.getAllCourses();
     }
 
-    showChosen() {
-        this.courseService.showChosen();
+    getChosen() {
+        const result = this.courseService.getChosen();
+        return result;
     }
 }
 

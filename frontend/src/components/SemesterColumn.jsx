@@ -10,7 +10,9 @@ export default function SemesterColumn({
   onHover,
   onSelect,
   onTogglePin,
-  withHover
+  withHover,
+  onChosenChanged,
+  chosenIds
 }) {
 
     let totalCredits = 0;
@@ -46,6 +48,8 @@ export default function SemesterColumn({
             withHover={withHover}
             isRelated={highlightedId === course.id || prereqIds.has(course.id) || dependentIds.has(course.id)
             }
+            onChosenChanged={onChosenChanged}
+            isChosen={chosenIds.has(course.id)}
           />
         ))}
       </div>

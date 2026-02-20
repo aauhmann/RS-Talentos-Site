@@ -8,7 +8,9 @@ export default function CourseCard({
   isPrereq = false,
   isDependent = false,
   withHover = false,
-  isRelated = false
+  isRelated = false,
+  onChosenChanged,
+  isChosen = false
 }) {
   const labelStyles = {
     "Obrigatória": "text-blue-600 bg-blue-50",
@@ -23,12 +25,14 @@ export default function CourseCard({
   const highlightClass = 
       isPinned
     ? "ring-2 ring-blue-500 shadow-lg scale-[1.01]"
-    : isHighlighted
-    ? "ring-2 ring-gray-500 shadow-lg scale-[1.01]"
     : isPrereq
     ? "ring-2 ring-purple-400 shadow-md scale-[1.01]"
     : isDependent
     ? "ring-2 ring-orange-400 shadow-md scale-[1.01]"
+    : isChosen
+    ? "ring-2 ring-green-500 shadow-md scale-[1.01]"
+    : isHighlighted
+    ? "ring-2 ring-gray-500 shadow-lg scale-[1.01]"
     : "hover:shadow-lg hover:border-blue-300 hover:scale-[1.005]";
 
   const fadeClass = withHover && !isRelated ? "opacity-45" : "opacity-100";
@@ -38,7 +42,10 @@ export default function CourseCard({
       id={`subject-${course.id}`}
       onMouseEnter={() => onHover?.(course.id)}
       onMouseLeave={() => onHover?.(null)}
-      onClick={() => onTogglePin?.(course.id)}
+      onClick={() => {
+        onHover?.(course.id);
+        onTogglePin?.(course.id);
+      }}
       className={[
         "group relative p-2.5 rounded-xl border border-gray-200 bg-white transition-all text-black flex flex-col transition-all",
         fadeClass,
@@ -78,9 +85,35 @@ export default function CourseCard({
         </button>
 
         <button
-          onClick={(e) => {
+          onClick={async (e) => {
             e.stopPropagation();
-            // Ação do botão +
+            try {
+              const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+              console.log('Enviando para:', `${apiUrl}/api/courses/chosen`);
+              console.log('Curso ID:', course.id);
+              
+              const res = await fetch(`${apiUrl}/api/courses/chosen`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: course.id })
+              });
+              
+              console.log('Status resposta:', res.status);
+              const text = await res.text();
+              console.log('Resposta texto:', text);
+              
+              const result = text ? JSON.parse(text) : {};
+              console.log('Resultado parsed:', result);
+              
+              if (result.success) {
+                console.log('Curso adicionado:', result.chosen);
+              } else {
+                console.error('Erro:', result.message);
+              }
+              onChosenChanged?.();
+            } catch (err) {
+              console.error('Erro completo:', err);
+            }
           }}
           className="bg-gray-200 hover:bg-green-300 text-gray-800 font-medium py-1 px-3 rounded-lg transition-colors border-2 border-transparent hover:border-green-500 focus:outline-none"
         >
