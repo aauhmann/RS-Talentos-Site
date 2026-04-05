@@ -58,7 +58,7 @@ export default function App() {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
         const json = await res.json();
-        const ids = new Set(json.map((c) => c.id));
+        const ids = new Set(json.chosen.map((c) => c.id));
         setChosenIds(ids);
       } catch (e) {
         console.error('Erro ao carregar chosen:', e);

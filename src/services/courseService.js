@@ -91,7 +91,8 @@ class CourseService {
     getChosenCourses(userId) {
         const user = this.getOrCreateUser(userId);
 
-        return user.chosen;
+        return { success: true, 
+            chosen: user.chosen };
     }
 
     updateChosenCourse(courseId, userId, semesterPlanner) {

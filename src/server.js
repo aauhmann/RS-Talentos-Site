@@ -6,7 +6,7 @@ const app = express();
 
 app.use(cors({
   origin: ['https://curriculo-ecp.netlify.app', 'http://localhost:5173'],
-  methods: ['GET', 'POST', 'DELETE'],
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
   credentials: true
 }));
 

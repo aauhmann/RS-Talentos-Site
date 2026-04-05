@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { X } from "lucide-react";
 
 export default function PlannerModal({
@@ -9,8 +9,7 @@ export default function PlannerModal({
     userId
 }) {
 
-    const [s1, setS1] = useState([]);
-    const [s2, setS2] = useState([]);
+    const [chosenCourses, setChosenCourses] = useState([]);
     const [dragOver, setDragOver] = useState(null);
 
     const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
@@ -28,23 +27,15 @@ export default function PlannerModal({
             throw new Error(`HTTP ${res.status}`);
         }
 
-        const text = await res.text();
-        console.log('Response text:', text);
+        const responseData = await res.json();
+        console.log('Response data:', responseData);
         
-        const chosen = text ? JSON.parse(text) : [];
+        const chosen = Array.isArray(responseData.chosen) 
+            ? responseData.chosen
+            : [];
         console.log('Parsed chosen:', chosen);
 
-        const normalized = chosen
-        .map((item) => {
-            if (typeof item === "string") {
-                return allCourses.find((c) => c.id === item);
-            }
-            return item;
-        })
-        .filter(Boolean);
-
-        console.log('Normalized courses:', normalized);
-        setS1(normalized);
+        setChosenCourses(chosen);
 
     }   catch (err) {
         console.error("Erro ao carregar chosen:", err);
@@ -56,50 +47,103 @@ export default function PlannerModal({
     const creditsSum = (list) =>
         list.reduce((sum, c) => sum + (Number(c.credits) || 0), 0);
 
-    const handleDrop = (to, e) => {
+    const updateCourseSemester = async (courseId, semesterPlanner) => {
+        const res = await fetch(`${apiUrl}/api/courses/chosen/${courseId}`, {
+            method: "PATCH",
+            headers: {
+            "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+            userId: userId,
+            semesterPlanner,
+            }),
+        });
+
+        if (!res.ok) {
+            throw new Error("Erro ao atualizar semestre da cadeira");
+        }
+
+        return res.json();
+    };
+
+    // const handleDrop = (to, e) => {
+    //     e.preventDefault();
+    //     setDragOver(null);
+
+    //     const courseId = e.dataTransfer.getData("courseId");
+    //     if (!courseId) return;
+
+    //     const course =
+    //         s1.find((c) => c.id === courseId) ||
+    //         s2.find((c) => c.id === courseId) ||
+    //         allCourses.find((c) => c.id === courseId);
+
+    //     if (!course) return;
+
+    //     setS1((prev) => prev.filter((c) => c.id !== courseId));
+    //     setS2((prev) => prev.filter((c) => c.id !== courseId));
+
+    //     if (to === "s1") setS1((prev) => (prev.some((c) => c.id === courseId) ? prev : [...prev, course]));
+    //     if (to === "s2") setS2((prev) => (prev.some((c) => c.id === courseId) ? prev : [...prev, course]));
+    // };
+
+    const handleDrop = async (toSemester, e) => {
         e.preventDefault();
         setDragOver(null);
 
         const courseId = e.dataTransfer.getData("courseId");
         if (!courseId) return;
 
-        const course =
-            s1.find((c) => c.id === courseId) ||
-            s2.find((c) => c.id === courseId) ||
-            allCourses.find((c) => c.id === courseId);
+        const previousChosenCourses = chosenCourses;
 
-        if (!course) return;
+        const updatedChosenCourses = chosenCourses
+        .map((course) =>
+            course.id === courseId
+            ? { ...course, semesterPlanner: toSemester }
+            : course
+        );
 
-        setS1((prev) => prev.filter((c) => c.id !== courseId));
-        setS2((prev) => prev.filter((c) => c.id !== courseId));
+        setChosenCourses(updatedChosenCourses);
 
-        if (to === "s1") setS1((prev) => (prev.some((c) => c.id === courseId) ? prev : [...prev, course]));
-        if (to === "s2") setS2((prev) => (prev.some((c) => c.id === courseId) ? prev : [...prev, course]));
+        try {
+            await updateCourseSemester(courseId, toSemester);
+        } catch (err) {
+            console.error("Erro ao atualizar semestre:", err);
+            setChosenCourses(previousChosenCourses);
+        }
     };
 
-    const removeFromS1 = async (courseId) => {
+    const removeFromPlanner = async (courseId) => {
+        const previousChosenCourses = chosenCourses;
+
+        const updatedChosenCourses = chosenCourses.filter(
+            (course) => course.id !== courseId
+        );
+
+        setChosenCourses(updatedChosenCourses);
+
         try {
         await fetch(`${apiUrl}/api/courses/chosen/${courseId}?userId=${userId}`, {
             method: "DELETE",
         });
-        setS1((prev) => prev.filter((c) => c.id !== courseId));
+        
         onChosenChanged?.();
         } catch (err) {
-        console.error("Erro ao remover:", err);
+            console.error("Erro ao remover:", err);
+            setChosenCourses(previousChosenCourses);
         }
     };
 
-    const removeFromS2 = async (courseId) => {
-    try {
-        await fetch(`${apiUrl}/api/courses/chosen/${courseId}?userId=${userId}`, {
-            method: "DELETE",
-        });
-        setS2((prev) => prev.filter((c) => c.id !== courseId));
-        onChosenChanged?.();
-    } catch (err) {
-        console.error("Erro ao remover:", err);
-    }
-};
+    const coursesBySemester = useMemo(() => {
+        return chosenCourses.reduce((coursesBySemester, course) => {
+            const semesterKey = String(course.semesterPlanner ?? 1);
+
+            if (!coursesBySemester[semesterKey]) coursesBySemester[semesterKey] = [];
+            coursesBySemester[semesterKey].push(course);
+
+            return coursesBySemester;
+        }, {});
+    }, [chosenCourses]);
 
     const Column = ({ title, list, colKey }) => (
         <div
@@ -146,9 +190,7 @@ export default function PlannerModal({
 
                     <button
                         onClick={() =>
-                        colKey === "s1"
-                        ? removeFromS1(c.id)
-                        : removeFromS2(c.id)
+                        removeFromPlanner(c.id)
                         }
                     className="text-xs px-2 py-1 rounded-lg bg-gray-100 hover:bg-red-100 text-black hover:text-red-600 transition-colors border-2 border-transparent border-black hover:border-red-500 focus:outline-none"
                     >
@@ -184,8 +226,8 @@ export default function PlannerModal({
         </div>
 
         <div className="flex gap-4 overflow-x-auto pb-2">
-          <Column title="Semestre 1" list={s1} colKey="s1" />
-          <Column title="Semestre 2" list={s2} colKey="s2" />
+          <Column title="Semestre 1" list={coursesBySemester["1"] || []} colKey="1" />
+          <Column title="Semestre 2" list={coursesBySemester["2"] || []} colKey="2" />
         </div>
       </div>
     </div>
