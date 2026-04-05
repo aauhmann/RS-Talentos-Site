@@ -156,7 +156,7 @@ export default function PlannerModal({
             </span>
         </div>
 
-        <div className={["min-h-[420px] rounded-xl border border-dashed border-gray-200 bg-gray-50 p-3 space-y-2 transition-all",  
+        <div className={["h-[420px] overflow-y-auto rounded-xl border border-dashed border-gray-200 bg-gray-50 p-3 space-y-2 transition-all",  
                 dragOver === colKey ? "border-blue-400 bg-blue-50" : "border-gray-200 bg-gray-50",
             ].join(" ")}
             onDragOver={(e) => {
