@@ -2,6 +2,9 @@ const Course = require('../models/courseModel');
 const Sheet = require('../models/sheetModel');
 const path = require("path");
 
+const chosenByUser = {};
+const CHOSEN_EXPIRATION_MS = 2 * 60 * 60 * 1000; // 2 hours
+
 class CourseService {
     #courses
 
@@ -38,6 +41,64 @@ class CourseService {
 
     getAllCourses() {
         return this.#courses;
+    }
+
+    cleanupExpiredChosen() {
+        const now = Date.now();
+        for (const [userId, data] of Object.entries(chosenByUser)) {
+            if (now - data.lastActive > CHOSEN_EXPIRATION_MS) {
+            delete chosenByUser[userId];
+            }
+        }
+    }
+
+    getOrCreateUser(userId) {
+        this.cleanupExpiredChosen();
+
+        if (!chosenByUser[userId]) {
+            chosenByUser[userId] = {
+            chosen: [],
+            lastActive: Date.now()
+            };
+        }
+
+        chosenByUser[userId].lastActive = Date.now();
+
+        return chosenByUser[userId];
+    }
+
+    addChosenCourse(courseId, userId) {
+        const user = this.getOrCreateUser(userId);
+        const course = this.getCourse(courseId);
+
+        if (!course) {
+            return { error: "Course not found", status: 404 }; 
+        }
+
+        const exists = user.chosen.some(c => c.id === courseId); // Avoids adding the same course twice
+
+        if (!exists) {
+            user.chosen.push({ 
+                ...course,
+                semesterPlanner: 1
+             });
+        }
+
+        return { success: true, chosen: user.chosen };
+    }
+
+    getChosenCourses(userId) {
+        const user = this.getOrCreateUser(userId);
+
+        return user.chosen;
+    }
+
+    updateChosenCourse(courseId, userId) {
+        
+    }
+
+    deleteChosenCourse(courseId, userId) {
+        
     }
 }
 
