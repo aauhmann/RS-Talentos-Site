@@ -39,6 +39,10 @@ router.post('/chosen', (req, res) => { controller.addChosenCourse(req, res) });
 
 router.get('/chosen', (req, res) => { controller.getChosenCourses(req, res) });
 
+router.patch('/chosen/:id', (req, res) => { controller.updateChosenCourse(req, res) });
+
+router.delete('/chosen/:id', (req, res) => { controller.deleteChosenCourse(req, res) });
+
 // router.delete('/chosen/:id', (req, res) => {
 //     const userId = req.query.userId;
 //     if (!userId) return res.status(400).json({ error: "userId required" });

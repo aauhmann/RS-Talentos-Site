@@ -18,9 +18,10 @@ class CourseController {
     }
 
     addChosenCourse(req, res) {
-        const { courseId, userId } = req.body;
+        const { courseId, userId } = req.body; 
+
         if (!userId) {
-            return { error: "userId required", status: 400 };
+            return res.status(400).json({ error: "userId required" });
         }
 
         const result = this.courseService.addChosenCourse(courseId, userId);
@@ -34,6 +35,7 @@ class CourseController {
 
     getChosenCourses(req, res) {
         const userId = req.query.userId;
+        
         if (!userId) {
             return res.status(400).json({ error: "userId required" });
         }
@@ -41,6 +43,43 @@ class CourseController {
         const chosenCourses = this.courseService.getChosenCourses(userId);
         
         return res.json(chosenCourses);
+    }
+
+    updateChosenCourse(req, res) {
+        const courseId = req.params.id;
+        const { userId, semesterPlanner } = req.body;
+
+        if (!userId) {
+            return res.status(400).json({ error: "userId required" });
+        }
+
+        const result = this.courseService.updateChosenCourse(courseId,
+            userId,
+            semesterPlanner
+        );
+
+        if (result.error) {
+            return res.status(result.status).json({ error: result.error });
+        }
+
+        return res.json(result);
+    }
+
+    deleteChosenCourse(req, res) {
+        const courseId = req.params.id;
+        const userId = req.query.userId;
+
+        if (!userId) {
+            return res.status(400).json({ error: "userId required" });
+        }
+
+        const result = this.courseService.deleteChosenCourse(courseId, userId);
+
+        if (result.error) {
+            return res.status(result.status).json({ error: result.error });
+        }
+
+        return res.json(result);
     }
 }
 

@@ -84,7 +84,8 @@ class CourseService {
              });
         }
 
-        return { success: true, chosen: user.chosen };
+        return { success: true, 
+            chosen: user.chosen };
     }
 
     getChosenCourses(userId) {
@@ -93,12 +94,32 @@ class CourseService {
         return user.chosen;
     }
 
-    updateChosenCourse(courseId, userId) {
-        
+    updateChosenCourse(courseId, userId, semesterPlanner) {
+        const user = this.getOrCreateUser(userId);
+        const course = user.chosen.find(c => c.id === courseId);
+
+        if (!course) {
+            return { error: "Course not found", status: 404 }; 
+        }
+
+        course.semesterPlanner = semesterPlanner;
+
+        return { success: true, 
+            chosen: user.chosen };
     }
 
     deleteChosenCourse(courseId, userId) {
-        
+        const user = this.getOrCreateUser(userId);
+        const exists = user.chosen.some(c => c.id === courseId);
+
+        if (!exists) {
+            return { error: "Course not found", status: 404 }; 
+        }
+
+        user.chosen = user.chosen.filter(c => c.id !== courseId);
+
+        return { success: true, 
+            chosen: user.chosen };
     }
 }
 
