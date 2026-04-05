@@ -97,7 +97,7 @@ export default function CourseCard({
                 const res = await fetch(`${apiUrl}/api/courses/chosen`, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ id: course.id, userId })
+                  body: JSON.stringify({ courseId: course.id, userId })
                 });
 
                 console.log('Status resposta:', res.status);

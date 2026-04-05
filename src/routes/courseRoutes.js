@@ -39,14 +39,14 @@ router.post('/chosen', (req, res) => { controller.addChosenCourse(req, res) });
 
 router.get('/chosen', (req, res) => { controller.getChosenCourses(req, res) });
 
-router.delete('/chosen/:id', (req, res) => {
-    const userId = req.query.userId;
-    if (!userId) return res.status(400).json({ error: "userId required" });
-    chosenByUser[userId] = chosenByUser[userId] || { chosen: [], lastActive: Date.now() };
-    chosenByUser[userId].lastActive = Date.now();
-    chosenByUser[userId].chosen = chosenByUser[userId].chosen.filter(course => course.id !== req.params.id);
-    res.json({ success: true, chosen: chosenByUser[userId].chosen });
-});
+// router.delete('/chosen/:id', (req, res) => {
+//     const userId = req.query.userId;
+//     if (!userId) return res.status(400).json({ error: "userId required" });
+//     chosenByUser[userId] = chosenByUser[userId] || { chosen: [], lastActive: Date.now() };
+//     chosenByUser[userId].lastActive = Date.now();
+//     chosenByUser[userId].chosen = chosenByUser[userId].chosen.filter(course => course.id !== req.params.id);
+//     res.json({ success: true, chosen: chosenByUser[userId].chosen });
+// });
 
 // router.get("/chosen", (req, res) => {
 //     const userId = req.query.userId;
